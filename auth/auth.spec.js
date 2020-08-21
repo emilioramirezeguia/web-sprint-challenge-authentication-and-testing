@@ -41,5 +41,14 @@ describe("auth-router", () => {
 
       expect(response.status).toBe(200);
     });
+
+    it("sends back a token", async () => {
+      const response = await supertest(server).post("/api/auth/login").send({
+        username: "ramirez",
+        password: "ramirez",
+      });
+
+      expect(response.body.token).toBeTruthy();
+    });
   });
 });
