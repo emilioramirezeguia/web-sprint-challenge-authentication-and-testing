@@ -4,15 +4,31 @@ const server = require("../api/server");
 const db = require("../database/dbConfig");
 const Users = require("./auth-model");
 
-describe("server", () => {
+describe("auth-router", () => {
   describe("POST /register", () => {
-    it("should return 201 Created", async () => {
+    beforeEach(async () => {
+      await db("users").truncate();
+    });
+
+    it("returns 201 Created", async () => {
       const response = await supertest(server).post("/api/auth/register").send({
-        username: "emilio5",
-        password: "emilio5",
+        username: "emilio",
+        password: "emilio",
       });
 
       expect(response.status).toBe(201);
+    });
+
+    it("adds a new user", async () => {
+      await supertest(server).post("/api/auth/register").send({
+        username: "ramirez",
+        password: "ramirez",
+      });
+
+      const users = await db("users");
+
+      expect(users).toHaveLength(1);
+      expect(users[0]).toHaveProperty("username", "ramirez");
     });
   });
 });
