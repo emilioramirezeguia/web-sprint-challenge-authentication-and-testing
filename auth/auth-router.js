@@ -1,8 +1,9 @@
 const router = require("express").Router();
 const bcryptjs = require("bcryptjs");
-const signToken = require("../helpers/signToken");
 
 const Users = require("./auth-model");
+
+const signToken = require("../helpers/signToken");
 
 // Register new user
 router.post("/register", (req, res) => {
