@@ -31,4 +31,15 @@ describe("auth-router", () => {
       expect(users[0]).toHaveProperty("username", "ramirez");
     });
   });
+
+  describe("POST /login", () => {
+    it("returns 200 OK", async () => {
+      const response = await supertest(server).post("/api/auth/login").send({
+        username: "ramirez",
+        password: "ramirez",
+      });
+
+      expect(response.status).toBe(200);
+    });
+  });
 });
