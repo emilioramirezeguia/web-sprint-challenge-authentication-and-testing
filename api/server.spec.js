@@ -1,8 +1,7 @@
 const supertest = require("supertest");
 
-const server = require("../api/server");
+const server = require("./server");
 const db = require("../database/dbConfig");
-const Users = require("./auth-model");
 
 describe("auth-router", () => {
   describe("POST /register", () => {
