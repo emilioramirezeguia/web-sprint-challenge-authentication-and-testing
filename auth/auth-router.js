@@ -4,9 +4,10 @@ const bcryptjs = require("bcryptjs");
 const Users = require("./auth-model");
 
 const signToken = require("../helpers/signToken");
+const { validateUser } = require("./authenticate-middleware");
 
 // Register new user
-router.post("/register", (req, res) => {
+router.post("/register", validateUser, (req, res) => {
   const user = req.body;
 
   // hash the password
@@ -25,7 +26,7 @@ router.post("/register", (req, res) => {
 });
 
 // Login existing user
-router.post("/login", (req, res) => {
+router.post("/login", validateUser, (req, res) => {
   const user = req.body;
 
   Users.findBy({ username: user.username })

@@ -6,7 +6,17 @@
 const jwt = require("jsonwebtoken");
 const constants = require("../helpers/constants");
 
-module.exports = (req, res, next) => {
+const validateUser = (req, res, next) => {
+  if (!req.body.username) {
+    res.status(400).json({ message: "Please add a username :)" });
+  } else if (!req.body.password) {
+    res.status(400).json({ message: "Don't forget your password :)" });
+  } else {
+    next();
+  }
+};
+
+const authenticate = (req, res, next) => {
   const token = req.headers.authorization;
 
   if (token) {
@@ -27,4 +37,9 @@ module.exports = (req, res, next) => {
       .status(401)
       .json({ error: "Please provide the necessary credentials." });
   }
+};
+
+module.exports = {
+  validateUser,
+  authenticate,
 };
