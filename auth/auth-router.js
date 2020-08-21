@@ -1,8 +1,10 @@
 const router = require("express").Router();
 const bcryptjs = require("bcryptjs");
-const Auth = require("./auth-model");
+const signToken = require("../helpers/signToken");
 
-// Register a new user
+const Users = require("./auth-model");
+
+// Register new user
 router.post("/register", (req, res) => {
   const user = req.body;
 
@@ -12,7 +14,7 @@ router.post("/register", (req, res) => {
 
   user.password = hash;
   // save the user to the database
-  Auth.add(user)
+  Users.add(user)
     .then((user) => {
       res.status(201).json({ user });
     })
@@ -21,8 +23,30 @@ router.post("/register", (req, res) => {
     });
 });
 
+// Login existing user
 router.post("/login", (req, res) => {
-  // implement login
+  const user = req.body;
+
+  Users.findBy({ username: user.username })
+    .then((users) => {
+      const foundUser = users[0];
+
+      if (user && bcryptjs.compareSync(user.password, foundUser.password)) {
+        const token = signToken(foundUser);
+
+        res.status(200).json({
+          message: "Welcome to our API. Here's your token...",
+          token,
+        });
+      } else {
+        res
+          .status(401)
+          .json({ message: "Sorry, you're not authorized to use our API." });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({ error: error.message });
+    });
 });
 
 module.exports = router;
